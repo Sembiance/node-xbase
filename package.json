@@ -1,0 +1,9 @@
+{
+	"name"					: "node-base",
+	"version"				: "0.0.1",
+	"author"				: "Robert Schultz <robert@cosmicrealms.com>",
+	"description"			: "private package for base",
+	"private"				: true,
+	"main"					: "base.js",
+	"repository"            : { "type" : "git", "url" : "https://github.com/Sembiance/node-base"}
+}

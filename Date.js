@@ -1,1 +1,9 @@
-/mnt/compendium/DevLab/common/js/Date.js
+"use strict";
+
+if(!Date.now)
+{
+	Date.now = function()
+	{
+		return +(new Date());
+	};
+}

@@ -1,9 +1,9 @@
 {
-	"name"					: "base",
+	"name"					: "xbase",
 	"version"				: "0.0.1",
 	"author"				: "Robert Schultz <robert@cosmicrealms.com>",
-	"description"			: "private package for base",
+	"description"			: "common JS files used in all my JS projects",
 	"private"				: true,
 	"main"					: "base.js",
-	"repository"            : { "type" : "git", "url" : "https://github.com/Sembiance/node-base"}
+	"repository"            : { "type" : "git", "url" : "https://github.com/Sembiance/node-xbase"}
 }

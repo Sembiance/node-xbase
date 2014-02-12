@@ -132,6 +132,62 @@ if(!Array.prototype.forEach)
 	};
 }
 
+Array.prototype.multiForEach = function(callback, numAtOnce, thisArg)
+{
+	var T, k;
+
+	numAtOnce = numAtOnce || 1;
+
+	if(typeof this==="undefined" || this===null)
+		throw new TypeError(" this is null or not defined");
+
+	var O = Object(this);
+	var len = O.length >>> 0;
+
+	if ({}.toString.call(callback)!=="[object Function]")
+		throw new TypeError(callback + " is not a function");
+
+	if(thisArg)
+		T = thisArg;
+
+	k = 0;
+
+	var kIndexes = [];
+	var kArgs = [];
+	while(k<len)
+	{
+		var kValue;
+
+		if(k in O)
+		{
+			kIndexes.push(k);
+			kArgs.push(O[k]);
+		}
+
+		if(kArgs.length===numAtOnce)
+		{
+			kArgs.push(kIndexes, O);
+			callback.apply(T, kArgs);
+			kArgs = [];
+			kIndexes = [];
+		}
+
+		k++;
+	}
+
+	if(kArgs.length>0)
+	{
+		while(kArgs.length<numAtOnce)
+		{
+			kArgs.push(undefined);
+			kIndexes.push(undefined);
+		}
+
+		kArgs.push(kIndexes, O);
+		callback.apply(T, kArgs);
+	}
+};
+
 if(!Array.prototype.every)
 {
 	Array.prototype.every = function(fun /*, thisp */)
@@ -298,9 +354,9 @@ if(!Array.prototype.reduceRight)
 
 if(!Array.prototype.contains)
 {
-	Array.prototype.contains = function(i)
+	Array.prototype.contains = function(val)
 	{
-		return this.indexOf(i)!==-1;
+		return this.indexOf(val)!==-1;
 	};
 }
 

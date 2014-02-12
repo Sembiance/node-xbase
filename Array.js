@@ -132,7 +132,7 @@ if(!Array.prototype.forEach)
 	};
 }
 
-Array.prototype.multiForEach = function(callback, numAtOnce, thisArg)
+Array.prototype.forEachBatch = function(callback, numAtOnce, thisArg)
 {
 	var T, k;
 

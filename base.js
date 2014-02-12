@@ -70,33 +70,65 @@
 	}
 	exports.clone = clone;
 
-	function CBIterator(_a, _fun)
+	function CBRunner(_fun, _val, _i, _finish)
+	{
+		this.fun = _fun;
+		this.val = _val;
+		this.i = _i;
+		this.finish = _finish;
+
+		CBRunner.prototype.run = function()
+		{
+			this.fun(this.val, function(err, result) { this.finish(err, result, this.i); }.bind(this), this.i);
+		};
+	}
+
+	function CBIterator(_a, _fun, _atOnce)
 	{
 		this.a = clone(_a);
 		this.fun = _fun;
-		this.results = null;
+		this.atOnce = _atOnce || 1;
+		this.results = [];
 		this.i=0;
+		this.running=[];
 
 		CBIterator.prototype.go = function(cb)
 		{
 			this.cb = cb || function(){};
+			if(this.a.length<1)
+				return this.cb(undefined, []);
+
 			this.next();
 		};
 
-		CBIterator.prototype.next = function(err, result)
+		CBIterator.prototype.next = function()
 		{
-			if(this.results===null)
-				this.results = [];
-			else
-				this.results.push(result);
+			var toRun = [];
+			while(this.running.length<this.atOnce && this.a.length>0)
+			{
+				var _i = this.i++;
+				this.running.push(_i);
+				toRun.push(new CBRunner(this.fun, this.a.shift(), _i, this.finish.bind(this)));
+			}
 
+			while(toRun.length)
+			{
+				toRun.shift().run();
+			}
+		};
+
+		CBIterator.prototype.finish = function(err, result, _i)
+		{
 			if(err)
 				return this.cb(err, this.results);
 
-			if(!this.a.length)
+			this.results[_i] = result;
+			this.running.remove(_i);
+
+			if(this.running.length===0 && this.a.length===0)
 				return this.cb(undefined, this.results);
 
-			this.fun(this.a.shift(), this.next.bind(this), this.i++);
+			this.next();
 		};
 	}
 
@@ -104,7 +136,15 @@
 	{
 		Array.prototype.serialForEach = function(fun, cb)
 		{
-			(new CBIterator(this, fun)).go(cb);
+			(new CBIterator(this, fun, 1)).go(cb);
+		};
+	}
+
+	if(!Array.prototype.parallelForEach)
+	{
+		Array.prototype.parallelForEach = function(fun, cb, atOnce)
+		{
+			(new CBIterator(this, fun, atOnce||3)).go(cb);
 		};
 	}
 

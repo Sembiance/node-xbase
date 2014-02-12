@@ -114,7 +114,7 @@ if(!Object.merge)
 			if(!hop.call(o1, key) || !dupHandler)
 				o1[key] = o2[key];
 			else
-				o1[key] = dupHandler(o1[key], o2[key]);
+				o1[key] = dupHandler(o1[key], o2[key], key);
 		});
 
 		return o1;
@@ -133,7 +133,12 @@ if(!Object.map)
 		Object.forEach(obj, function(key, value)
 		{
 			var r = cb(key, value);
-			result[r[0]] = r[1];
+			if(!Array.isArray(r))
+				result[key] = r;
+			else if(r.length===1)
+				result[key] = r[0];
+			else
+				result[r[0]] = r[1];
 		});
 
 		return result;

@@ -391,12 +391,37 @@ if(!Array.prototype.containsAll)
 
 if(!Array.prototype.unique)
 {
-	Array.prototype.unique = function(fun)
+	Array.prototype.unique = function()
 	{
 		return this.filter(function(item, i, a)
 		{
 			return a.indexOf(item)===i;
 		});
+	};
+}
+
+if(!Array.prototype.uniqueBySort)
+{
+	Array.prototype.uniqueBySort = function()
+	{
+		this.sort();
+
+		var out = [];
+		var len = this.length-1;
+		if(len>=0)
+		{
+			for(var i=0;i<len;i++)
+			{
+				if(this[i]!==this[i+1])
+				{
+					out.push(this[i]);
+				}
+			}
+
+			out.push(this[len]);
+		}
+
+		return out;
 	};
 }
 

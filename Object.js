@@ -152,3 +152,17 @@ if(!Object.isObject)
 		return arg!==null && !Array.isArray(arg) && typeof arg==="object";
 	};
 }
+
+if(!Object.swapKeyValues)
+{
+	Object.swapKeyValues = function(obj)
+	{
+		var newObj = {};
+		Object.forEach(obj, function(key, val)
+		{
+			newObj[val] = key;
+		});
+
+		return newObj;
+	};
+}

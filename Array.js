@@ -700,6 +700,16 @@ if(!Array.prototype.clear)
 	};
 }
 
+if(!Array.prototype.pushAll)
+{
+	Array.prototype.pushAll = function(arr)
+	{
+		this.push.apply(this, arr);
+		
+		return this;
+	};
+}
+
 // Sums all the numbers in the array
 if(!Array.prototype.sum)
 {

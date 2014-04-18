@@ -780,7 +780,9 @@ if(!Array.prototype.subtract)
 {
 	Array.prototype.subtract = function(a)
 	{
-		return this.filter(function(o) { return a.indexOf(o)===-1; });
+		var result = this.slice();
+		a.forEach(function(o) { result.remove(o); });
+		return result;
 	};
 }
 

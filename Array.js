@@ -400,6 +400,47 @@ if(!Array.prototype.unique)
 	};
 }
 
+if(!Array.prototype.multiSort)
+{
+	Array.prototype.multiSort = function(sorters, reverse)
+	{
+		sorters = Array.toArray(sorters);
+
+		this.sort(function(a, b)
+		{
+			for(var i=0,len=sorters.length;i<len;i++)
+			{
+				var sort = sorters[i];
+
+				var aVal = sort(a);
+				var bVal = sort(b);
+
+				if(typeof aVal==="string")
+				{
+					var stringCompareResult = aVal.localeCompare(bVal);
+					if(stringCompareResult<0)
+						return (reverse && (!Array.isArray(reverse) || reverse[i]) ? 1 : -1);
+
+					if(stringCompareResult>0)
+						return (reverse && (!Array.isArray(reverse) || reverse[i]) ? -1 : 1);
+				}
+				else
+				{
+					if(aVal<bVal)
+						return (reverse && (!Array.isArray(reverse) || reverse[i]) ? 1 : -1);
+
+					if(aVal>bVal)
+						return (reverse && (!Array.isArray(reverse) || reverse[i]) ? -1 : 1);
+				}
+			}
+
+			return 0;
+		});
+
+		return this;
+	};
+}
+
 if(!Array.prototype.uniqueBySort)
 {
 	Array.prototype.uniqueBySort = function()

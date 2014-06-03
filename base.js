@@ -163,6 +163,17 @@
 
 	Object.forEach({log : ["debug", "info", "log"], warn : ["warn"], error : ["error", "critical", "crit"]}, function(consoleKey, synonyms)
 	{
-		synonyms.forEach(function(synonym) { exports[synonym] = base.IS_NODE ? console[consoleKey].bind(console) : (window.console[consoleKey].bind ? window.console[consoleKey].bind(window.console) : window.cosnole[consoleKey]); });
+		synonyms.forEach(function(synonym) { exports[synonym] = base.IS_NODE ? console[consoleKey].bind(console) : (window.console[consoleKey].bind ? window.console[consoleKey].bind(window.console) : window.console[consoleKey]); });
 	});
+
+	if(base.IS_NODE)
+	{
+		exports.error = function()
+		{			
+			if(arguments.length===1 && arguments[0] && arguments[0].hasOwnProperty("stack"))
+				console.error(arguments[0].stack);
+			else
+				console.error.apply(console.error, arguments);
+		};
+	}
 })(typeof exports==="undefined" ? window.base={} : exports);

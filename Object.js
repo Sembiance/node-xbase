@@ -75,6 +75,9 @@ if(!Object.every)
 		var matches = true;
 		Object.keys(obj).forEach(function(key, i)
 		{
+			if(!matches)
+				return;
+			
 			matches = cb(key, obj[key], i);
 		});
 

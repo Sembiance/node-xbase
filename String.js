@@ -82,6 +82,21 @@ if(!String.prototype.strip)
 	};
 }
 
+if(!String.prototype.innerTrim)
+{
+	String.prototype.innerTrim = function()
+	{
+		var text = this;
+		var re = new RegExp(/\s\s/g);
+		while(re.test(text))
+		{
+			text = text.replace(re, " ");
+		}
+
+		return text;
+	};
+}
+
 
 if(!String.prototype.capitalize)
 {

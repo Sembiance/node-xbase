@@ -88,7 +88,7 @@ if(!String.prototype.innerTrim)
 	{
 		var text = this;
 		var re = new RegExp(/\s\s/g);
-		while(re.test(text))
+		while(text.search(re)!==-1)
 		{
 			text = text.replace(re, " ");
 		}

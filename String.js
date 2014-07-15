@@ -45,24 +45,12 @@ if(!String.prototype.contains)
 String.prototype.trim = function(chars)
 {
 	if(!chars)
-		chars = " \t\n\r\u00a0";	// 00a0 is hex for 160 which is nbsp
+		chars = "\\s\\n\\r";
 
-	var text = this;
-	var c;
-	var i;
-	for(i=0,c=text.charAt(i);i<text.length && chars.indexOf(c)!==-1;i++,c=text.charAt(i))
-	{
-	}
+	if(Array.isArray(chars))
+		chars = chars.join("");
 
-	text = text.substring(i);
-
-	for(i=(text.length-1),c=text.charAt(i);i>=0 && chars.indexOf(c)!==-1;i--,c=text.charAt(i))
-	{
-	}
-
-	text = text.substring(0, (i+1));
-
-	return text;
+	return this.replace(new RegExp("^[" + chars + "]+|[" + chars + "]+$", "g"), "");
 };
 
 if(!String.prototype.replaceAll)

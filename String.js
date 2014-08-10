@@ -85,7 +85,6 @@ if(!String.prototype.innerTrim)
 	};
 }
 
-
 if(!String.prototype.capitalize)
 {
 	String.prototype.capitalize = function ()

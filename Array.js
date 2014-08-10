@@ -512,7 +512,7 @@ if(!Array.toArray)
 		if(Array.isArray(arg))
 			return arg;
 
-		if(Object.isObject(arg) && arg.length)
+		if(Object.isObject(arg) && "length" in arg)
 		{
 			var a=[];
 			for(var i=0,len=arg.length;i<len;i++)

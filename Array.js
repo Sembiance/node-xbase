@@ -509,7 +509,20 @@ if(!Array.toArray)
 {
 	Array.toArray = function (arg)
 	{
-		return Array.isArray(arg) ? arg : [arg];
+		if(Array.isArray(arg))
+			return arg;
+
+		if(Object.isObject(arg) && arg.length)
+		{
+			var a=[];
+			for(var i=0,len=arg.length;i<len;i++)
+			{
+				a.push(arg[i]);
+			}
+			return a;
+		}
+	
+		return [arg];
 	};
 }
 

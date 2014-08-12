@@ -112,7 +112,6 @@ if(!String.prototype.toArray)
 	};
 }
 
-
 if(!String.prototype.repeat)
 {
 	String.prototype.repeat = function(count, seperator)
@@ -150,5 +149,13 @@ if(!String.prototype.pad)
 		padCharacter = typeof padCharacter==="undefined" ? " " : padCharacter;
 
 		return padCharacter.repeat(minLength-this.length) + ""+this;
+	};
+}
+
+if(!String.prototype.replaceCharAt)
+{
+	String.prototype.replaceCharAt = function(index, c)
+	{
+		return this.substring(0, index) + c + this.substring(index+1);
 	};
 }

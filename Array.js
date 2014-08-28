@@ -572,7 +572,7 @@ if(!Array.prototype.remove)
 	{
 		var loc = this.indexOf(val);
 		if(loc===-1)
-			return undefined;
+			return this;
 		
 		this.splice(loc, 1);
 

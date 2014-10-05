@@ -169,3 +169,36 @@ if(!Object.swapKeyValues)
 		return newObj;
 	};
 }
+
+if(!Object.toArray)
+{
+	Object.toArray = function(obj, keyKey)
+	{
+		var result = [];
+
+		Object.forEach(obj, function(key, value)
+		{
+			var objValue = Object.isObject(value) ? value : {value:value};
+			objValue[keyKey] = key;
+			result.push(objValue);
+		});
+
+		return result;
+	};
+}
+
+if(!Object.clone)
+{
+	Object.clone = function(src, deep)
+	{
+		var result = {};
+		Object.forEach(src, function(key, val)
+		{
+			if(deep)
+				result[key] = (Array.isArray(val) ? val.clone(deep) : (Object.isObject(val) ? Object.clone(val, deep) : val));
+			else
+				result[key] = val;
+		});
+		return result;
+	};
+}

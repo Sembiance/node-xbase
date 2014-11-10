@@ -170,23 +170,6 @@ if(!Object.swapKeyValues)
 	};
 }
 
-if(!Object.toArray)
-{
-	Object.toArray = function(obj, keyKey)
-	{
-		var result = [];
-
-		Object.forEach(obj, function(key, value)
-		{
-			var objValue = Object.isObject(value) ? value : {value:value};
-			objValue[keyKey] = key;
-			result.push(objValue);
-		});
-
-		return result;
-	};
-}
-
 if(!Object.clone)
 {
 	Object.clone = function(src, deep)
@@ -199,6 +182,25 @@ if(!Object.clone)
 			else
 				result[key] = val;
 		});
+		return result;
+	};
+}
+
+if(!Object.toArray)
+{
+	Object.toArray = function(obj, keyKey)
+	{
+		var result = [];
+		keyKey = keyKey || "key";
+		console.log(keyKey);
+
+		Object.forEach(obj, function(key, value)
+		{
+			var objValue = Object.isObject(value) ? Object.clone(value) : {value:Object.clone(value)};
+			objValue[keyKey] = key;
+			result.push(objValue);
+		});
+
 		return result;
 	};
 }

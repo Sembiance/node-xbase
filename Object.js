@@ -192,7 +192,6 @@ if(!Object.toArray)
 	{
 		var result = [];
 		keyKey = keyKey || "key";
-		console.log(keyKey);
 
 		Object.forEach(obj, function(key, value)
 		{

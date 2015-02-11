@@ -352,6 +352,26 @@ if(!Array.prototype.reduceRight)
 	};
 }
 
+if(!Array.prototype.replaceAll)
+{
+	Array.prototype.replaceAll = function(oldVal, newVal)
+	{
+		if(oldVal===newVal)
+			return this;
+		
+		do
+		{
+			var valLoc = this.indexOf(oldVal);
+			if(valLoc===-1)
+				break;
+
+			this.splice(valLoc, 1, newVal);
+		} while(true);
+		
+		return this;
+	};
+}
+
 if(!Array.prototype.contains)
 {
 	Array.prototype.contains = function(val)
@@ -386,6 +406,20 @@ if(!Array.prototype.containsAll)
 		}
 
 		return true;
+	};
+}
+
+if(!Array.prototype.containsAny)
+{
+	Array.prototype.containsAny = function(vals)
+	{
+		for(var i=0,len=vals.length;i<len;i++)
+		{
+			if(this.indexOf(vals[i])!==-1)
+				return true;
+		}
+
+		return false;
 	};
 }
 

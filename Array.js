@@ -820,7 +820,7 @@ if(!Array.prototype.average)
 }
 
 // On average, how far from the average is each number in our set?
-// Pass true to calc a sample variance
+// Pass true to calc a sample variance (if the data only represents a small sample of the whole of possible data)
 if(!Array.prototype.variance)
 {
 	Array.prototype.variance = function(sample)

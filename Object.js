@@ -203,3 +203,20 @@ if(!Object.toArray)
 		return result;
 	};
 }
+
+if(!Object.renameKey)
+{
+	Object.renameKey = function(obj, oldKey, newKey)
+	{
+		if(oldKey===newKey)
+			return obj;
+
+		if(obj.hasOwnProperty(oldKey))
+		{
+			obj[newKey] = obj[oldKey];
+			delete obj[oldKey];
+		}
+
+		return obj;
+	};
+}

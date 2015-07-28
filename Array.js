@@ -991,3 +991,17 @@ if(!Array.prototype.pushMany)
 		return this;
 	};
 }
+
+if(!Array.prototype.batch)
+{
+	Array.prototype.batch = function(count)
+	{
+		var batches = [];
+		while(this.length>0)
+		{
+			batches.push(this.splice(0, count));
+		}
+
+		return batches;
+	};
+}

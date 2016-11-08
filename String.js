@@ -148,7 +148,7 @@ if(!String.prototype.pad)
 
 		padCharacter = typeof padCharacter==="undefined" ? " " : padCharacter;
 
-		return padCharacter.repeat(minLength-this.length) + ""+this;
+		return padCharacter.repeat(minLength-this.length) + "" + this;
 	};
 }
 
@@ -157,5 +157,13 @@ if(!String.prototype.replaceCharAt)
 	String.prototype.replaceCharAt = function(index, c)
 	{
 		return this.substring(0, index) + c + this.substring(index+1);
+	};
+}
+
+if(!String.prototype.shorten)
+{
+	String.prototype.shorten = function(c)
+	{
+		return this.substring(0, this.length-c);
 	};
 }

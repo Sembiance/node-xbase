@@ -819,6 +819,21 @@ if(!Array.prototype.average)
 	};
 }
 
+// Returns the median of all the numbers in the array (middle number)
+if(!Array.prototype.median)
+{
+	Array.prototype.median = function()
+	{
+		var w = this.clone().sort(function(a,b) {return a-b;} );
+		var half = Math.floor(w.length/2);
+
+		if(w.length % 2)
+			return w[half];
+		else
+			return (w[half-1] + w[half]) / 2.0;
+	};
+}
+
 // On average, how far from the average is each number in our set?
 // Pass true to calc a sample variance (if the data only represents a small sample of the whole of possible data)
 if(!Array.prototype.variance)

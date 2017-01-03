@@ -58,6 +58,8 @@
 				console.error(arguments[0].stack);
 			else
 				console.error.apply(console.error, arguments);
+
+			return 1;
 		};
 	}
 })(typeof exports==="undefined" ? window.base={} : exports);

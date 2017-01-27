@@ -1020,3 +1020,35 @@ if(!Array.prototype.batch)
 		return batches;
 	};
 }
+
+if(!Array.prototype.min)
+{
+	Array.prototype.min = function()
+	{
+		if(this.length<1)
+			return;
+
+		var min=this[0];
+		for(var i=1;i<this.length;i++)
+		{
+			min=Math.min(min, this[i]);
+		}
+		return min;
+	};
+}
+
+if(!Array.prototype.max)
+{
+	Array.prototype.max = function()
+	{
+		if(this.length<1)
+			return;
+
+		var max=this[0];
+		for(var i=1;i<this.length;i++)
+		{
+			max=Math.max(max, this[i]);
+		}
+		return max;
+	};
+}

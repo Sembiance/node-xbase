@@ -1,8 +1,11 @@
 {
-	"name"					: "@sembiance/xbase",
-	"version"				: "1.1.19",
-	"author"				: "Robert Schultz <robert@cosmicrealms.com>",
-	"description"			: "common JS files used in all my JS projects",
-	"main"					: "base.js",
-	"repository"            : { "type" : "git", "url" : "https://github.com/Sembiance/xbase"}
+	"name": "@sembiance/xbase",
+	"version": "1.1.20",
+	"author": "Robert Schultz <robert@cosmicrealms.com>",
+	"description": "common JS files used in all my JS projects",
+	"main": "base.js",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Sembiance/xbase"
+	}
 }

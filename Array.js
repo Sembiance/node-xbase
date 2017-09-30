@@ -634,7 +634,7 @@ if(!Array.prototype.remove)
 	{
 		var loc = this.indexOf(val);
 		if(loc===-1)
-			return undefined;
+			return this;
 		
 		this.splice(loc, 1);
 
@@ -651,7 +651,10 @@ if(!Array.prototype.removeAll)
 		var a=this;
 		vals.forEach(function(val)
 		{
-			while(a.remove(val)) { }
+			while(a.contains(val))
+			{
+				a.remove(val);
+			}
 		});
 
 		return this;
@@ -1078,5 +1081,21 @@ if(!Array.prototype.max)
 			max=Math.max(max, this[i]);
 		}
 		return max;
+	};
+}
+
+// https://tc39.github.io/ecma262/#sec-array.prototype.find
+if(!Array.prototype.find)
+{
+	Array.prototype.find = function(fun)
+	{
+		for(let i=0;i<this.length;i++)
+		{
+			var r = fun(this[i]);
+			if(r)
+				return r;
+		}
+
+		return undefined;
 	};
 }

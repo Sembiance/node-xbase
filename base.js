@@ -1,9 +1,10 @@
 "use strict";
-/*global window: true*/
+/* global window: true */
+/* eslint-disable global-require */
 
-(function(exports)
+(function _base(exports)
 {
-	var base = exports;
+	const base = exports;
 
 	exports.IS_NODE = typeof process!=="undefined" && typeof process.versions!=="undefined" && typeof process.versions.node!=="undefined";
 	if(base.IS_NODE)
@@ -40,37 +41,46 @@
 	exports.TB = base.GB*1024;
 	exports.PB = base.TB*1024;
 
-	exports.clone = function(src, deep)
+	exports.UTF8 = {encoding : "utf8"};
+
+	exports.clone = function clone(src, deep)
 	{
 		return (Array.isArray(src) ? src.clone(deep) : (Object.isObject(src) ? Object.clone(src, deep) : src));
 	};
 
-	Object.forEach({log : ["debug", "info", "log"], warn : ["warn"], error : ["error", "critical", "crit"]}, function(consoleKey, synonyms)
+	Object.forEach({log : ["debug", "info", "log"], warn : ["warn"], error : ["error", "critical", "crit"]}, (consoleKey, synonyms) =>
 	{
-		if(!base.IS_NODE && (!window.console || !window.console[consoleKey]))
-			consoleKey = "log";
+		const type = (!base.IS_NODE && (!window.console || !window.console[consoleKey])) ? "log" : consoleKey;
 
-		synonyms.forEach(function(synonym)
+		synonyms.forEach(synonym =>
 		{
 			if(base.IS_NODE)
-				exports[synonym] = console[consoleKey].bind(console);
+				exports[synonym] = console[type].bind(console);
 			else if(!window.console)
-				exports[synonym] = function() {};
+				exports[synonym] = function noop() {};
 			else
-				exports[synonym] = ( window.console[consoleKey].bind ? window.console[consoleKey].bind(window.console) : window.console[consoleKey]);
+				exports[synonym] = ( window.console[type].bind ? window.console[type].bind(window.console) : window.console[type]);
 		});
 	});
 
 	if(base.IS_NODE)
 	{
-		exports.error = function()
-		{			
-			if(arguments.length===1 && arguments[0] && arguments[0].hasOwnProperty("stack"))
-				console.error(arguments[0].stack);
+		exports.error = function error(err)
+		{
+			if(arguments.length===1 && err && err.hasOwnProperty("stack"))
+				console.error(err.stack);
 			else
-				console.error.apply(console.error, arguments);
+				console.error.apply(console.error, arguments);	// eslint-disable-line prefer-rest-params
 
 			return 1;
 		};
 	}
+
+	exports.FINISH = function finish(err)
+	{
+		if(err)
+			process.exit(base.error(err));
+
+		process.exit(0);
+	};
 })(typeof exports==="undefined" ? window.base={} : exports);

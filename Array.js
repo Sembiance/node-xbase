@@ -1084,18 +1084,14 @@ if(!Array.prototype.max)
 	};
 }
 
-// https://tc39.github.io/ecma262/#sec-array.prototype.find
-if(!Array.prototype.find)
+// Always use mine, as it correctly returns the element unlike the non-standard IE version
+Array.prototype.find = function(fun)
 {
-	Array.prototype.find = function(fun)
+	for(let i=0;i<this.length;i++)
 	{
-		for(let i=0;i<this.length;i++)
-		{
-			var r = fun(this[i]);
-			if(r)
-				return r;
-		}
+		if(fun(this[i]))
+			return this[i];
+	}
 
-		return undefined;
-	};
-}
+	return undefined;
+};

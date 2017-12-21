@@ -97,6 +97,35 @@ if(!Array.prototype.filter)
 	};
 }
 
+if(!Array.prototype.filterInPlace)
+{
+	Array.prototype.filterInPlace = function(fun /*, thisp */)
+	{
+		if(this===null)
+			throw new TypeError();
+
+		var j=0, squeezing=false;
+		var thisp = arguments[1];
+		this.forEach(function (e, i)
+		{ 
+			if(fun.call(thisp, e, i, this))
+			{
+				if(squeezing)
+					this[j] = e;
+				j++;
+			}
+			else
+			{
+				squeezing = true;
+			}
+		}.bind(this));
+
+		this.length = j;
+
+		return this;
+	};
+}
+
 if(!Array.prototype.forEach)
 {
 	Array.prototype.forEach = function(callback, thisArg)
@@ -244,6 +273,14 @@ if(!Array.prototype.map)
 		}
 
 		return A;
+	};
+}
+
+if(!Array.prototype.mapInPlace)
+{
+	Array.prototype.mapInPlace = function(callback, thisArg)
+	{
+		this.splice.apply(this, [0, this.length, ...this.map(callback, thisArg)]);
 	};
 }
 
@@ -532,8 +569,9 @@ if(!Array.prototype.pickRandom)
 		{
 			Array.toArray(excludedItems).forEach(function(excludedItem)
 			{
-				if(a.contains(excludedItem))
-					excludedIndexes.push(a.indexOf(excludedItem));
+				var excludedItemIndex = a.indexOf(excludedItem);
+				if(excludedItemIndex!==-1)
+					excludedIndexes.push(excludedItemIndex);
 			});
 		}
 
@@ -543,7 +581,8 @@ if(!Array.prototype.pickRandom)
 			pickedIndexes.push(Math.randomIntExcluding(0, (this.length-1), pickedIndexes.concat(excludedIndexes)));
 		}
 
-		return pickedIndexes.map(function(pickedIndex) { return a[pickedIndex]; });
+		var result = pickedIndexes.map(function(pickedIndex) { return a[pickedIndex]; });
+		return (num===1 ? result[0] : result);
 	};
 }
 
@@ -855,7 +894,7 @@ if(!Array.prototype.median)
 {
 	Array.prototype.median = function()
 	{
-		var w = this.clone().sort(function(a,b) {return a-b;} );
+		var w = this.slice().sort(function(a,b) {return a-b;} );
 		var half = Math.floor(w.length/2);
 
 		if(w.length % 2)
@@ -931,19 +970,33 @@ if(!Array.prototype.last)
 
 if(!Array.prototype.clone)
 {
-	Array.prototype.clone = function(deep)
+	Array.prototype.clone = function(shallow)
 	{
 		var result = [];
 		var src = this;
 		for(var i=0,len=src.length;i<len;i++)
 		{
-			if(deep)
-				result.push((Array.isArray(src[i]) ? src[i].clone(deep) : (Object.isObject(src[i]) ? Object.clone(src[i], deep) : src[i])));
-			else
+			if(shallow)
 				result.push(src[i]);
+			else
+				result.push((Array.isArray(src[i]) ? src[i].clone() : (Object.isObject(src[i]) ? Object.clone(src[i]) : src[i])));
 		}
 
 		return result;
+	};
+}
+
+
+if(!Array.prototype.pushCopyInPlace)
+{
+	Array.prototype.pushCopyInPlace = function(copies)
+	{
+		copies = copies || 1;
+		var copy = this.slice();
+		for(var i=0;i<(copies||1);i++)
+			this.push(...copy);
+
+		return this;
 	};
 }
 
@@ -954,20 +1007,30 @@ function CBRunner(_fun, _val, _i, _finish)
 	this.i = _i;
 	this.finish = _finish;
 
-	CBRunner.prototype.run = function()
+	CBRunner.prototype.run = function(delay)
+	{
+		if(delay)
+			setTimeout(this.runActual.bind(this), delay);
+		else
+			this.runActual();
+	};
+
+	CBRunner.prototype.runActual = function()
 	{
 		this.fun(this.val, function(err, result) { this.finish(err, result, this.i); }.bind(this), this.i);
 	};
 }
 
-function CBIterator(_a, _fun, _atOnce)
+function CBIterator(_a, _fun, _atOnce, _minInterval)
 {
-	this.a = _a.clone();
+	this.a = _a.slice();
 	this.fun = _fun;
 	this.atOnce = _atOnce || 1;
 	this.results = [];
 	this.i=0;
 	this.running=[];
+	this.minInterval = _minInterval || 0;
+	this.intervalDelay=0;
 
 	CBIterator.prototype.go = function(cb)
 	{
@@ -990,12 +1053,17 @@ function CBIterator(_a, _fun, _atOnce)
 
 		while(toRun.length)
 		{
-			toRun.shift().run();
+			if(this.intervalDelay<this.atOnce)
+				this.intervalDelay++;
+
+			toRun.shift().run(this.intervalDelay*this.minInterval);
 		}
 	};
 
 	CBIterator.prototype.finish = function(err, result, _i)
 	{
+		this.intervalDelay--;
+		
 		if(err)
 			return this.cb(err, this.results);
 
@@ -1019,9 +1087,9 @@ if(!Array.prototype.serialForEach)
 
 if(!Array.prototype.parallelForEach)
 {
-	Array.prototype.parallelForEach = function(fun, cb, atOnce)
+	Array.prototype.parallelForEach = function(fun, cb, atOnce, minInterval)
 	{
-		(new CBIterator(this, fun, atOnce||3)).go(cb);
+		(new CBIterator(this, fun, atOnce||3, minInterval||0)).go(cb);
 	};
 }
 
@@ -1031,7 +1099,7 @@ if(!Array.prototype.pushMany)
 	{
 		while((count--)>0)
 		{
-			this.push((Array.isArray(val) ? val.clone(true) : (Object.isObject(val) ? Object.clone(val, true) : val)));
+			this.push((Array.isArray(val) ? val.clone() : (Object.isObject(val) ? Object.clone(val) : val)));
 		}
 
 		return this;
@@ -1087,7 +1155,7 @@ if(!Array.prototype.max)
 // Always use mine, as it correctly returns the element unlike the non-standard IE version
 Array.prototype.find = function(fun)
 {
-	for(let i=0;i<this.length;i++)
+	for(var i=0;i<this.length;i++)
 	{
 		if(fun(this[i]))
 			return this[i];

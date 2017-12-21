@@ -1,5 +1,6 @@
 "use strict";
 /* global window: true */
+/* eslint-env node, browser */
 /* eslint-disable global-require */
 
 (function _base(exports)
@@ -16,6 +17,7 @@
 		require("./Date");
 		require("./Function");
 		require("./Number");
+		require("./JSON");
 
 		exports.IS_DEV = !process.argv.contains("--staging") && !process.argv.contains("--production");
 		exports.IS_STAGING = !!process.argv.contains("--staging");
@@ -43,9 +45,23 @@
 
 	exports.UTF8 = {encoding : "utf8"};
 
-	exports.clone = function clone(src, deep)
+	exports.clone = function clone(src, skipKeys, shallow)
 	{
-		return (Array.isArray(src) ? src.clone(deep) : (Object.isObject(src) ? Object.clone(src, deep) : src));
+		return (Array.isArray(src) ? src.clone(shallow) : (Object.isObject(src) ? Object.clone(src, skipKeys, shallow) : src));
+	};
+
+	// Freeze an object/array, making it immutable with an option to recurse
+	exports.freeze = function freeze(o, recursive=false)
+	{
+		if(!Array.isArray(o) && !Object.isObject(o))
+			return o;
+
+		if(recursive)
+			(Object.isObject(o) ? Object.values(o) : o).forEach(v => base.freeze(v, true));
+
+		Object.freeze(o);
+
+		return o;
 	};
 
 	exports.FINISH = function finish(err)

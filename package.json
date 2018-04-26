@@ -1,6 +1,6 @@
 {
 	"name": "@sembiance/xbase",
-	"version": "1.1.24",
+	"version": "2.0.0",
 	"author": "Robert Schultz <robert@cosmicrealms.com>",
 	"description": "common JS files used in all my JS projects",
 	"main": "base.js",

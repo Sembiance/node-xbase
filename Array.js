@@ -115,7 +115,7 @@ if(!Array.prototype.mapInPlace)
 	};
 }
 
-// Returns an object where the keys are the values in the array and the values are the result of cb(val)
+// Returns an object where the keys are the values in the array and the values are the result of cb(val, i)
 if(!Array.prototype.mapToObject)
 {
 	Array.prototype.mapToObject = function mapToObject(cb, thisArg)
@@ -123,7 +123,7 @@ if(!Array.prototype.mapToObject)
 		const r = {};
 
 		for(let i=0, len=this.length;i<len;i++)
-			r[this[i]] = cb.call(thisArg, this[i]);
+			r[this[i]] = cb.call(thisArg, this[i], i);
 
 		return r;
 	};

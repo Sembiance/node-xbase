@@ -71,4 +71,4 @@
 
 		process.exit(0);
 	};
-})(typeof exports==="undefined" ? window.base={} : exports);
+})(typeof window!=="undefined" ? window.base={} : exports);

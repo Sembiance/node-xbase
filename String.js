@@ -13,7 +13,7 @@ if(!String.prototype.includes)
 {
 	String.prototype.includes = function includes(match)
 	{
-		return this.indexOf(match)!==-1;
+		return this.indexOf(match)!==-1;	// eslint-disable-line sembiance/favor-includes
 	};
 }
 
@@ -177,5 +177,18 @@ if(!String.prototype.strip)
 	{
 		const chars = Array.isArray(_chars) ? _chars.join() : Array.prototype.slice.call(arguments).join();	// eslint-disable-line prefer-rest-params
 		return this.replace(new RegExp("[" + chars + "]", "g"), "");
+	};
+}
+
+// Trim specific characters from the front and end of string
+if(!String.prototype.trimChars)
+{
+	String.prototype.trimChars = function trimChars(_chars)
+	{
+		if(!_chars)
+			return this.trim();
+
+		const chars = Array.isArray(_chars) ? _chars.join("") : _chars;
+		return this.replace(new RegExp("^[" + chars + "]+|[" + chars + "]+$", "g"), "");
 	};
 }

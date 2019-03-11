@@ -1,12 +1,12 @@
 {
-	"name"        : "@sembiance/XU",
-	"version"     : "4.0.0",
+	"name"        : "@sembiance/xu",
+	"version"     : "4.0.1",
 	"author"      : "Robert Schultz <robert@cosmicrealms.com>",
 	"description" : "common JS files used in all my JS projects",
 	"main"        : "XU.js",
 	"repository"  :
 	{
 		"type" : "git",
-		"url"  : "https://github.com/Sembiance/XU"
+		"url"  : "https://github.com/Sembiance/xu"
 	}
 }

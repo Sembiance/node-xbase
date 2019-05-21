@@ -30,6 +30,21 @@ if(!Number.isNumber)
 	};
 }
 
+// Converts a given number of bytes into KB/MB/GB/TB. From: https://stackoverflow.com/questions/15900485/correct-way-to-convert-size-in-bytes-to-kb-mb-gb-in-javascript
+if(!Number.prototype.bytesToSize)
+{
+	Number.prototype.bytesToSize = function bytesToSize()
+	{
+		const bytes = this;	// eslint-disable-line consistent-this
+		const sizes = ["bytes", "KB", "MB", "GB", "TB"];
+		if(bytes===0)
+			return "0 bytes";
+		
+		const i = +(Math.floor(Math.log(bytes) / Math.log(1024)));
+		return Math.round(bytes / Math.pow(1024, i), 2) + (i===0 ? " " : "") + sizes[i];
+	};
+}
+
 // Converts a given number of seconds into a clock such as 4:50
 if(!Number.prototype.toClock)
 {

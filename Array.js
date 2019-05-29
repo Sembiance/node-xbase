@@ -51,6 +51,7 @@ Array.prototype.find = function find(cb)
 //// Custom ////
 ////////////////
 
+// Calls cb(ele, i, arr) for each element in the array and if cb() returns true then that element is removed from the array. This happens just once.
 Array.prototype.findAndRemove = function findAndRemove(cb)
 {
 	for(let i=0, len=this.length;i<len;i++)
@@ -62,6 +63,7 @@ Array.prototype.findAndRemove = function findAndRemove(cb)
 	return undefined;
 };
 
+// Forces the passed in variable to be an Array. Just returns it if it already is an Array, otherwise it returns [v]
 if(!Array.force)
 {
 	Array.force = function force(v)

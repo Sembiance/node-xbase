@@ -324,7 +324,7 @@ if(!Array.prototype.flat)
 	};
 }
 
-// Sorts an array based on the values returned by the sorter cb functions passed in. reverse can be `true` or an array of booleans corresponding to each sorter cb
+// Sorts an array, in place, based on the values returned by the sorter cb functions passed in. reverse can be `true` or an array of booleans corresponding to each sorter cb
 if(!Array.prototype.multiSort)
 {
 	Array.prototype.multiSort = function multiSort(_sorters, reverse)
@@ -475,12 +475,24 @@ if(!Array.prototype.rotateInPlace)
 	};
 }
 
-// Returns a NEW Array containing all the elements of the base array after except for the values passed in
-if(!Array.prototype.subtract)
+// Returns a NEW Array containing all the elements of the base array after any matches of any vals were removed
+if(!Array.prototype.subtractAll)
 {
-	Array.prototype.subtract = function subtract(vals=[])
+	Array.prototype.subtractAll = function subtractAll(vals=[])
 	{
 		return this.filter(v => !vals.includes(v));
+	};
+}
+
+// Returns a NEW Array containing all the elements of the base array after any matches of any vals were removed once
+if(!Array.prototype.subtractOnce)
+{
+	Array.prototype.subtractOnce = function subtractOnce(vals=[])
+	{
+		const r = this.slice();
+		vals.forEach(val => r.removeOnce(val));
+
+		return r;
 	};
 }
 

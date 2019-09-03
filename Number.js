@@ -205,9 +205,9 @@ if(!Number.prototype.flipBit)
 }
 
 // Maps a number from one scale (in) to another scale (out) similar to how Arduino map() operates
-if(!Number.prototype.map)
+if(!Number.prototype.scale)
 {
-	Number.prototype.map = function map(inMin, inMax, outMin, outMax)
+	Number.prototype.scale = function scale(inMin, inMax, outMin, outMax)
 	{
 		return (((this - inMin) * (outMax - outMin)) / (inMax - inMin)) + outMin;
 	};

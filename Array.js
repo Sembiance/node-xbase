@@ -368,7 +368,7 @@ if(!Array.prototype.multiSort)
 	};
 }
 
-// Shuffles an array of numbers. Correctly.
+// Shuffles an array of numbers, Correctly. Does so IN PLACE and returns the array.
 if(!Array.prototype.shuffle)
 {
 	Array.prototype.shuffle = function shuffle()

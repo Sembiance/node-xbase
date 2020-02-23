@@ -651,9 +651,8 @@ if(!Array.prototype.pushCopyInPlace)
 		this.fun = _fun;
 		this.atOnce = _atOnce || 1;
 		this.results = [];
-		this.i=0;
+		this.i = this.lastRunTime = 0;
 		this.running=[];
-		this.lastRanTime = 0;
 		this.minInterval = _minInterval || 0;
 		this.scheduledTimeoutid = null;
 

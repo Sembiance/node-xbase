@@ -645,7 +645,7 @@ if(!Array.prototype.pushCopyInPlace)
 		};
 	}
 
-	function CBIterator(_a, _fun, _atOnce, _minInterval)
+	function CBIterator(_a, _fun, _atOnce, _minInterval, _tick)
 	{
 		this.a = _a.slice();
 		this.fun = _fun;
@@ -654,6 +654,7 @@ if(!Array.prototype.pushCopyInPlace)
 		this.i = this.lastRunTime = 0;
 		this.running=[];
 		this.minInterval = _minInterval || 0;
+		this.tick = _tick;
 		this.scheduledTimeoutid = null;
 
 		CBIterator.prototype.go = function go(cb)
@@ -692,6 +693,9 @@ if(!Array.prototype.pushCopyInPlace)
 
 		CBIterator.prototype.finish = function finish(err, result, curi)
 		{
+			if(this.tick)
+				this.tick();
+
 			if(err)
 				return this.cb(err, this.results);
 
@@ -708,17 +712,22 @@ if(!Array.prototype.pushCopyInPlace)
 
 	if(!Array.prototype.serialForEach)
 	{
-		Array.prototype.serialForEach = function serialForEach(fun, cb, minInterval)
+		Array.prototype.serialForEach = function serialForEach(fun, cb, _options)
 		{
-			(new CBIterator(this, fun, 1, minInterval||0)).go(cb);
+			const minInterval = typeof _options==="number" ? _options : ((_options || {}).minInterval || 0);
+			const tick = typeof _options==="object" ? _options.tick : undefined;
+			(new CBIterator(this, fun, 1, minInterval, tick)).go(cb);
 		};
 	}
 
 	if(!Array.prototype.parallelForEach)
 	{
-		Array.prototype.parallelForEach = function parallelForEach(fun, cb, atOnce, minInterval)
+		Array.prototype.parallelForEach = function parallelForEach(fun, cb, _options)
 		{
-			(new CBIterator(this, fun, atOnce||5, minInterval||0)).go(cb);
+			const atOnce = typeof _options==="number" ? _options : ((_options || {}).atOnce || 5);
+			const minInterval = typeof _options==="object" ? (_options.atOnce || 0) : 0;
+			const tick = typeof _options==="object" ? _options.tick : undefined;
+			(new CBIterator(this, fun, atOnce, minInterval, tick)).go(cb);
 		};
 	}
 })();

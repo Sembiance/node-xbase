@@ -36,11 +36,11 @@
 	exports.STARTUP_TIME = Date.now();
 
 	exports.BYTE = 1;
-	exports.KB = XU.BYTE*1024;
-	exports.MB = XU.KB*1024;
-	exports.GB = XU.MB*1024;
-	exports.TB = XU.GB*1024;
-	exports.PB = XU.TB*1024;
+	exports.KB = XU.BYTE*1000;
+	exports.MB = XU.KB*1000;
+	exports.GB = XU.MB*1000;
+	exports.TB = XU.GB*1000;
+	exports.PB = XU.TB*1000;
 
 	exports.UTF8 = {encoding : "utf8"};
 

@@ -1,4 +1,5 @@
 "use strict";
+/* eslint-disable node/callback-return */
 
 ////////////////////
 //// Polyfills /////
@@ -40,7 +41,7 @@ Array.prototype.find = function find(cb)
 {
 	for(let i=0, len=this.length;i<len;i++)
 	{
-		if(cb(this[i], i, this))	// eslint-disable-line callback-return
+		if(cb(this[i], i, this))
 			return this[i];
 	}
 
@@ -56,7 +57,7 @@ Array.prototype.findAndRemove = function findAndRemove(cb)
 {
 	for(let i=0, len=this.length;i<len;i++)
 	{
-		if(cb(this[i], i, this))	// eslint-disable-line callback-return
+		if(cb(this[i], i, this))
 			return this.splice(i, 1)[0];
 	}
 
@@ -414,7 +415,7 @@ if(!Array.prototype.reduceOnce)
 			if(r!==null)
 				return r;
 
-			const cbRes = cb(...args);	// eslint-disable-line callback-return
+			const cbRes = cb(...args);
 			return (typeof cbRes==="undefined" ? null : cbRes);
 		}, null);
 	};
@@ -622,7 +623,7 @@ if(!Array.prototype.pushCopyInPlace)
 
 (function _arrayAsyncFuncs()
 {
-	const p = (typeof window!=="undefined" && typeof window.performance!=="undefined") ? window.performance : ((typeof process!=="undefined" && typeof process.versions!=="undefined" && typeof process.versions.node!=="undefined") ? require("perf_hooks").performance : Date);	// eslint-disable-line max-len, no-undef, global-require
+	const p = (typeof window!=="undefined" && typeof window.performance!=="undefined") ? window.performance : ((typeof process!=="undefined" && typeof process.versions!=="undefined" && typeof process.versions.node!=="undefined") ? require("perf_hooks").performance : Date);	// eslint-disable-line max-len, no-undef, node/global-require
 
 	function CBRunner(_fun, _val, _i, _finish)
 	{
@@ -685,7 +686,7 @@ if(!Array.prototype.pushCopyInPlace)
 
 			this.running.push(curi);
 			this.lastRanTime = p.now();
-			new CBRunner(this.fun, this.a.shift(), curi, this.finish.bind(this)).run();
+			new CBRunner(this.fun, this.a.shift(), curi, this.finish.bind(this)).run();		// eslint-disable-line sembiance/tiptoe-shorter-finish-wrap
 
 			if(this.a.length>0 && this.running.length<this.atOnce)
 				this.scheduledTimeoutid = setTimeout(this.next.bind(this), this.minInterval+1);

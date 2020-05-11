@@ -1,6 +1,6 @@
 "use strict";
 /* eslint-env node, browser */
-/* eslint-disable global-require */
+/* eslint-disable node/global-require, node/no-missing-require */
 
 (function _XU(exports)
 {

@@ -11,7 +11,7 @@
 
 // Returns true if the valueToFind can be located in the array
 if(!Array.prototype.includes)
-	Array.prototype.includes = function includes(valueToFind, fromIndex) { return this.indexOf(valueToFind, fromIndex)!==-1; };		// eslint-disable-line sembiance/favor-includes
+	Array.prototype.includes = function includes(valueToFind, fromIndex) { return this.indexOf(valueToFind, fromIndex)!==-1; };		// eslint-disable-line unicorn/prefer-includes
 
 //------------//
 //// ES2015 ////
@@ -623,7 +623,7 @@ if(!Array.prototype.pushCopyInPlace)
 
 (function _arrayAsyncFuncs()
 {
-	const p = (typeof window!=="undefined" && typeof window.performance!=="undefined") ? window.performance : ((typeof process!=="undefined" && typeof process.versions!=="undefined" && typeof process.versions.node!=="undefined") ? require("perf_hooks").performance : Date);	// eslint-disable-line max-len, no-undef, node/global-require
+	const p = (typeof window!=="undefined" && typeof window.performance!=="undefined") ? window.performance : ((typeof process!=="undefined" && typeof process.versions!=="undefined" && typeof process.versions.node!=="undefined") ? require("perf_hooks").performance : Date);	// eslint-disable-line max-len, no-undef, node/global-require, node/no-unsupported-features/node-builtins
 
 	function CBRunner(_fun, _val, _i, _finish)
 	{

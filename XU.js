@@ -141,6 +141,9 @@
 			
 			if(typeof val==="boolean")
 				return c.fg.yellow + (val ? "true" : "false") + c.reset;
+			
+			if(val instanceof Error)
+				return "\n" + val.stack;
 
 			if(Array.isArray(val))
 				return c.fg.cyan + "[" + c.reset + val.map(val2string).join(c.fg.cyan + ", " + c.reset) + c.fg.cyan + "]" + c.reset;

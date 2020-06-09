@@ -144,6 +144,9 @@
 			
 			if(val instanceof Error)
 				return "\n" + val.stack;
+			
+			if(val instanceof RegExp)
+				return val.toString();
 
 			if(Array.isArray(val))
 				return c.fg.cyan + "[" + c.reset + val.map(val2string).join(c.fg.cyan + ", " + c.reset) + c.fg.cyan + "]" + c.reset;

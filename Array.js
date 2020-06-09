@@ -669,12 +669,14 @@ if(!Array.prototype.pushCopyInPlace)
 
 		CBIterator.prototype.next = function next()
 		{
-			const timeSinceLast = p.now()-this.lastRanTime;
-			
-			if(this.minInterval>0 && timeSinceLast<this.minInterval)
+			if(this.minInterval>0)
 			{
-				this.scheduledTimeoutid = setTimeout(this.next.bind(this), (this.minInterval-timeSinceLast)+1);
-				return;
+				const timeSinceLast = p.now()-this.lastRanTime;
+				if(timeSinceLast<this.minInterval)
+				{
+					this.scheduledTimeoutid = setTimeout(this.next.bind(this), (this.minInterval-timeSinceLast)+1);
+					return;
+				}
 			}
 
 			this.scheduledTimeoutid = null;
@@ -685,7 +687,8 @@ if(!Array.prototype.pushCopyInPlace)
 			const curi = this.i++;
 
 			this.running.push(curi);
-			this.lastRanTime = p.now();
+			if(this.minInterval>0)
+				this.lastRanTime = p.now();
 			new CBRunner(this.fun, this.a.shift(), curi, this.finish.bind(this)).run();		// eslint-disable-line sembiance/tiptoe-shorter-finish-wrap
 
 			if(this.a.length>0 && this.running.length<this.atOnce)
@@ -726,7 +729,7 @@ if(!Array.prototype.pushCopyInPlace)
 		Array.prototype.parallelForEach = function parallelForEach(fun, cb, _options)
 		{
 			const atOnce = typeof _options==="number" ? _options : ((_options || {}).atOnce || 5);
-			const minInterval = typeof _options==="object" ? (_options.atOnce || 0) : 0;
+			const minInterval = typeof _options==="object" ? (_options.minInterval || 0) : 0;
 			const tick = typeof _options==="object" ? _options.tick : undefined;
 			(new CBIterator(this, fun, atOnce, minInterval, tick)).go(cb);
 		};

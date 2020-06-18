@@ -180,6 +180,21 @@ if(!String.prototype.reverse)
 	};
 }
 
+// Reverses a string
+if(!String.prototype.innerTruncate)
+{
+	String.prototype.innerTruncate = function innerTruncate(_maxLen)
+	{
+		if(this.length<=_maxLen)
+			return this;
+		
+		const maxLen = _maxLen-1;
+		const trimSideLength = Math.floor((this.length-maxLen)/2);
+		const midPoint = Math.floor(this.length/2);
+		return this.substring(0, midPoint-trimSideLength) + "…" + this.substring(midPoint+(trimSideLength+((this.length-(trimSideLength*2))-maxLen)));
+	};
+}
+
 // Converts a string to proper case, capitilizing the first letter of each word and lowercasing the rest of the word
 if(!String.prototype.toProperCase)
 {

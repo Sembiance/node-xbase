@@ -77,7 +77,7 @@
 	exports.FINISH = function finish(err)
 	{
 		if(err)
-			process.exit(console.error(err));
+			process.exit(console.error(err), 1);
 
 		process.exit(0);
 	};

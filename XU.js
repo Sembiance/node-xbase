@@ -134,7 +134,7 @@
 		function val2string(val)	// eslint-disable-line no-inner-declarations
 		{
 			if(typeof val==="string")
-				return c.fg.green + val + c.reset;
+				return c.fg.magenta + val + c.reset;
 			
 			if(typeof val==="number")
 				return c.fg.white + val.toLocaleString().split(",").join(c.reset + c.fg.cyan + "," + c.fg.white).split(".").join(c.reset + c.fg.cyan + "." + c.fg.white) + c.reset;

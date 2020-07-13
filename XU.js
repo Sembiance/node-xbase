@@ -126,6 +126,25 @@
 	};
 	/* eslint-enable unicorn/escape-case, unicorn/no-hex-escape */
 
+	// Allows you to easily include multi-line strings and each line will be trimmed
+	exports.trim = function trim(strs, ...vals)
+	{
+		const r = [];
+		strs.forEach(str =>
+		{
+			const rVals = [str];
+			if(vals.length>0)
+			{
+				const val = vals.shift();
+				rVals.push((typeof val==="object" ? JSON.stringify(val) : ""+val));
+			}
+
+			r.push(...rVals.map(rVal => rVal.split("\n").map(line => line.trim()).join("\n")));
+		});
+
+		return r.join("");
+	};
+
 	// Better than console.log() automatically colorizes strings, numbers, arrays, etc that are includeed as template values
 	exports.log = function log(strs, ...vals)
 	{

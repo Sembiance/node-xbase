@@ -1,4 +1,5 @@
 "use strict";
+/* eslint-env browser */
 /* eslint-disable node/callback-return */
 
 ////////////////////
@@ -325,7 +326,7 @@ if(!Array.prototype.flat)
 	};
 }
 
-// Sorts an array, in place, based on the values returned by the sorter cb functions passed in. reverse can be `true` or an array of booleans corresponding to each sorter cb
+// Sorts an array, IN PLACE, based on the values returned by the sorter cb functions passed in. reverse can be `true` or an array of booleans corresponding to each sorter cb
 if(!Array.prototype.multiSort)
 {
 	Array.prototype.multiSort = function multiSort(_sorters, reverse)
@@ -393,6 +394,30 @@ if(!Array.prototype.unique)
 	Array.prototype.unique = function unique()
 	{
 		return this.filter((item, i, a) => a.indexOf(item)===i);
+	};
+}
+
+// Returns a NEW array containing just unique items from this array. Does it via sorting first
+if(!Array.prototype.uniqueBySort)
+{
+	Array.prototype.uniqueBySort = function uniqueBySort()
+	{
+		this.sort();
+
+		const out = [];
+		const len = this.length-1;
+		if(len>=0)
+		{
+			for(let i=0;i<len;i++)
+			{
+				if(this[i]!==this[i+1])
+					out.push(this[i]);
+			}
+
+			out.push(this[len]);
+		}
+
+		return out;
 	};
 }
 
@@ -612,7 +637,7 @@ if(!Array.prototype.pushCopyInPlace)
 {
 	Array.prototype.pushCopyInPlace = function pushCopyInPlace(_x)
 	{
-		const x = (_x || 1);
+		const x = (_x || 1);	// eslint-disable-line unicorn/prefer-default-parameters
 		const copy = this.slice();
 		for(let i=0;i<x;i++)
 			this.push(...copy);
@@ -623,7 +648,7 @@ if(!Array.prototype.pushCopyInPlace)
 
 (function _arrayAsyncFuncs()
 {
-	const p = (typeof window!=="undefined" && typeof window.performance!=="undefined") ? window.performance : ((typeof process!=="undefined" && typeof process.versions!=="undefined" && typeof process.versions.node!=="undefined") ? require("perf_hooks").performance : Date);	// eslint-disable-line max-len, no-undef, node/global-require, node/no-unsupported-features/node-builtins
+	const p = (typeof window!=="undefined" && typeof window.performance!=="undefined") ? window.performance : ((typeof process!=="undefined" && typeof process.versions!=="undefined" && typeof process.versions.node!=="undefined") ? require("perf_hooks").performance : Date);	// eslint-disable-line max-len, node/global-require
 
 	function CBRunner(_fun, _val, _i, _finish)
 	{

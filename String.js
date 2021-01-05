@@ -76,7 +76,7 @@ if(!String.prototype.padStart)
 {
 	String.prototype.padStart = function padStart(_targetLength, _padString)
 	{
-		let targetLength = _targetLength >> 0; // eslint-disable-line no-bitwise
+		let targetLength = _targetLength >> 0; // eslint-disable-line no-bitwise, unicorn/prefer-math-trunc
 		let padString = String(_padString || " ");
 		if(this.length>targetLength)
 			return String(this);
@@ -94,7 +94,7 @@ if(!String.prototype.padEnd)
 {
 	String.prototype.padEnd = function padEnd(_targetLength, _padString)
 	{
-		let targetLength = _targetLength >> 0; // eslint-disable-line no-bitwise
+		let targetLength = _targetLength >> 0; // eslint-disable-line no-bitwise, unicorn/prefer-math-trunc
 		let padString = String(_padString || " ");
 		if(this.length>targetLength)
 			return String(this);
@@ -191,7 +191,7 @@ if(!String.prototype.innerTruncate)
 		const maxLen = _maxLen-1;
 		const trimSideLength = Math.floor((this.length-maxLen)/2);
 		const midPoint = Math.floor(this.length/2);
-		return this.substring(0, midPoint-trimSideLength) + "…" + this.substring(midPoint+(trimSideLength+((this.length-(trimSideLength*2))-maxLen)));
+		return `${this.substring(0, midPoint-trimSideLength)}…${this.substring(midPoint+(trimSideLength+((this.length-(trimSideLength*2))-maxLen)))}`;
 	};
 }
 
@@ -204,13 +204,22 @@ if(!String.prototype.toProperCase)
 	};
 }
 
+// Converts a string to camel case
+if(!String.prototype.toCamelCase)
+{
+	String.prototype.toCamelCase = function toCamelCase()
+	{
+		return this.replace(/(?:^\w|[A-Z]|\b\w)/g, (word, index) => (index === 0 ? word.toLowerCase() : word.toUpperCase())).replace(/\s+/g, "");	// eslint-disable-line unicorn/better-regex
+	};
+}
+
 // Strips out the given chars from the string
 if(!String.prototype.strip)
 {
 	String.prototype.strip = function strip(_chars)
 	{
 		const chars = Array.isArray(_chars) ? _chars.join() : Array.prototype.slice.call(arguments).join();	// eslint-disable-line prefer-rest-params
-		return this.replace(new RegExp("[" + chars + "]", "g"), "");
+		return this.replace(new RegExp(`[${chars}]`, "g"), "");
 	};
 }
 
@@ -223,6 +232,31 @@ if(!String.prototype.trimChars)
 			return this.trim();
 
 		const chars = Array.isArray(_chars) ? _chars.join("") : _chars;
-		return this.replace(new RegExp("^[" + chars + "]+|[" + chars + "]+$", "g"), "");
+		return this.replace(new RegExp(`^[${chars}]+|[${chars}]+$`, "g"), "");
+	};
+}
+
+// Escape the string for HTML/XML and other markup language documents
+if(!String.prototype.escapeXML)
+{
+	String.prototype.escapeXML = function escapeXML()
+	{
+		return this.
+			replaceAll("&", "&amp;").
+			replaceAll("<", "&lt;").
+			replaceAll(">", "&gt;").
+			replaceAll('"', "&quot;").
+			replaceAll("'", "&#039;");
+	};
+}
+
+String.prototype.escapeHTML = String.prototype.escapeXML;
+
+if(!String.prototype.escapeURI)
+{
+	String.prototype.escapeURI = function escapeURI()
+	{
+		// WARNING: Not compatible with URL's that contain ?query=params&whatnot=true
+		return this.split("/").map(v => encodeURIComponent(v)).join("/");
 	};
 }

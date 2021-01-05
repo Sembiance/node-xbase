@@ -1,6 +1,6 @@
 "use strict";
 /* eslint-env node, browser */
-/* eslint-disable node/global-require, node/no-missing-require */
+/* eslint-disable node/global-require */
 
 (function _XU(exports)
 {
@@ -9,14 +9,12 @@
 	exports.IS_NODE = typeof process!=="undefined" && typeof process.versions!=="undefined" && typeof process.versions.node!=="undefined";
 	if(XU.IS_NODE)
 	{
-		require("./Math");
-		require("./Array");
-		require("./String");
-		require("./Object");
-		require("./Date");
-		require("./Function");
-		require("./Number");
-		require("./JSON");
+		require("./Math.js");
+		require("./Array.js");
+		require("./String.js");
+		require("./Object.js");
+		require("./Function.js");	// eslint-disable-line node/no-missing-require -- don't remove this line even though it appears un-used in VSCode
+		require("./Number.js");
 
 		exports.IS_DEV = !process.argv.includes("--staging") && !process.argv.includes("--production");
 		exports.IS_STAGING = !!process.argv.includes("--staging");
@@ -25,6 +23,8 @@
 	{
 		exports.IS_DEV = window.location.hostname.startsWith("dev.") || window.location.href.includes("dev=true");
 	}
+
+	const util = XU.IS_NODE ? require("util") : null;
 
 	exports.SECOND = 1000;
 	exports.MINUTE = XU.SECOND*60;
@@ -82,6 +82,13 @@
 		process.exit(0);
 	};
 
+	// Simple function I can stick on the end of tiptoe chains I don't really care too much about
+	exports.NOOP = function NOOP(err)
+	{
+		if(err)
+			console.error(err);
+	};
+
 	const cc = t => (XU.IS_NODE && process.stdout && process.stdout.hasColors && process.stdout.hasColors() ? t : "");
 	/* eslint-disable unicorn/escape-case, unicorn/no-hex-escape */
 	// https://en.wikipedia.org/wiki/ANSI_escape_code#Colors
@@ -126,6 +133,20 @@
 	};
 	/* eslint-enable unicorn/escape-case, unicorn/no-hex-escape */
 
+	// This will convert the above exports.c so you can call XU.cf.fg.cyan("Cyan Color")
+	exports.cf = {};
+	function functionizeColors(src, dest)
+	{
+		Object.forEach(src, (key, val) =>
+		{
+			if(Object.isObject(val))
+				functionizeColors(val, dest[key] = {});
+			else
+				dest[key] = str => `${src[key]}${str}`;
+		});
+	}
+	functionizeColors(exports.c, exports.cf);
+
 	// Allows you to easily include multi-line strings and each line will be trimmed
 	exports.trim = function trim(strs, ...vals)
 	{
@@ -136,7 +157,7 @@
 			if(vals.length>0)
 			{
 				const val = vals.shift();
-				rVals.push((typeof val==="object" ? JSON.stringify(val) : ""+val));
+				rVals.push((typeof val==="object" ? JSON.stringify(val) : `${val}`));
 			}
 
 			r.push(...rVals.map(rVal => rVal.split("\n").map(line => line.trim()).join("\n")));
@@ -150,28 +171,28 @@
 	{
 		const c = exports.c;
 
-		function val2string(val)	// eslint-disable-line no-inner-declarations
+		function val2string(val)
 		{
 			if(typeof val==="string")
 				return c.fg.magenta + val + c.reset;
 			
 			if(typeof val==="number")
-				return c.fg.white + val.toLocaleString().split(",").join(c.reset + c.fg.cyan + "," + c.fg.white).split(".").join(c.reset + c.fg.cyan + "." + c.fg.white) + c.reset;
+				return c.fg.white + val.toLocaleString().split(",").join(`${c.reset + c.fg.cyan},${c.fg.white}`).split(".").join(`${c.reset + c.fg.cyan}.${c.fg.white}`) + c.reset;
 			
 			if(typeof val==="boolean")
 				return c.fg.yellow + (val ? "true" : "false") + c.reset;
 			
 			if(val instanceof Error)
-				return "\n" + val.stack;
+				return util ? util.inspect(val, {colors : true, depth : Infinity}) : (`\n${val.stack}`);
 			
 			if(val instanceof RegExp)
 				return val.toString();
 
 			if(Array.isArray(val))
-				return c.fg.cyan + "[" + c.reset + val.map(val2string).join(c.fg.cyan + ", " + c.reset) + c.fg.cyan + "]" + c.reset;
+				return `${c.fg.cyan}[${c.reset}${val.map(val2string).join(`${c.fg.cyan}, ${c.reset}`)}${c.fg.cyan}]${c.reset}`;
 			
 			if(Object.isObject(val))
-				return c.fg.cyan + "{" + c.reset + Object.entries(val).map(([k, v]) => (k + c.fg.cyan + " : " + c.reset + val2string(v))).join(", ") + c.fg.cyan + "}" + c.reset;
+				return `${c.fg.cyan}{${c.reset}${Object.entries(val).map(([k, v]) => (`${k + c.fg.cyan} : ${c.reset}${val2string(v)}`)).join(", ")}${c.fg.cyan}}${c.reset}`;
 
 			return JSON.stringify(val);
 		}

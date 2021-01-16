@@ -527,9 +527,10 @@ if(!Array.prototype.batch)
 {
 	Array.prototype.batch = function batch(x=1)
 	{
+		const a = this.slice();
 		const batches = [];
-		while(this.length>0)
-			batches.push(this.splice(0, x));
+		while(a.length>0)
+			batches.push(a.splice(0, x));
 
 		return batches;
 	};

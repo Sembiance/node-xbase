@@ -208,4 +208,16 @@
 
 		console.log(r.join(""));
 	};
+
+	exports.parseJSON = function parseJSON(raw, defaultValue)
+	{
+		try
+		{
+			return JSON.parse(raw);
+		}
+		catch(err)
+		{
+			return defaultValue;
+		}
+	};
 })(typeof window!=="undefined" ? (window.XU ? window.XU : window.XU={}) : exports);

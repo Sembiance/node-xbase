@@ -180,7 +180,7 @@ if(!String.prototype.reverse)
 	};
 }
 
-// Reverses a string
+// Truncates the inner part of a string to maxLen
 if(!String.prototype.innerTruncate)
 {
 	String.prototype.innerTruncate = function innerTruncate(_maxLen)

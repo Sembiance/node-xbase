@@ -1,10 +1,6 @@
 {
 	"name"        : "@sembiance/xu",
-<<<<<<< HEAD
 	"version"     : "4.11.0",
-=======
-	"version"     : "4.10.4",
->>>>>>> 147702ac2f66a18f34d5b298d8ce0445521e1d48
 	"author"      : "Robert Schultz <robert@cosmicrealms.com>",
 	"description" : "common JS files used in all my JS projects",
 	"main"        : "XU.js",

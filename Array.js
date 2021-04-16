@@ -260,7 +260,7 @@ if(!Array.prototype.min)
 			return;
 
 		let r=this[0];
-		for(let i=1, len=this.lenghth;i<len;i++)
+		for(let i=1, len=this.length;i<len;i++)
 			r = Math.min(r, this[i]);
 
 		return r;
@@ -525,12 +525,29 @@ if(!Array.prototype.subtractOnce)
 // Batches up the values in the array into sub arrays of x length
 if(!Array.prototype.batch)
 {
-	Array.prototype.batch = function batch(x=1)
+	Array.prototype.batch = function batch(num=1, vertical)
 	{
 		const a = this.slice();
 		const batches = [];
-		while(a.length>0)
-			batches.push(a.splice(0, x));
+		if(vertical)
+		{
+			const rowCount = Math.ceil(a.length/num);
+			for(let y=0;y<rowCount;y++)
+			{
+				batches.push([]);
+				for(let x=0;x<num;x++)
+				{
+					const idx = y+(x*rowCount);
+					if(idx<a.length)
+						batches.last().push(a[idx]);
+				}
+			}
+		}
+		else
+		{
+			while(a.length>0)
+				batches.push(a.splice(0, num));
+		}
 
 		return batches;
 	};
@@ -683,6 +700,7 @@ if(!Array.prototype.pushCopyInPlace)
 		this.minInterval = _minInterval || 0;
 		this.tick = _tick;
 		this.scheduledTimeoutid = null;
+		this.errors = [];
 
 		CBIterator.prototype.go = function go(cb)
 		{
@@ -727,13 +745,13 @@ if(!Array.prototype.pushCopyInPlace)
 				this.tick();
 
 			if(err)
-				return this.cb(err, this.results);
+				this.errors.push(err);
 
 			this.results[curi] = result;
 			this.running.removeOnce(curi);
 
 			if(this.running.length===0 && this.a.length===0)
-				return this.cb(undefined, this.results);
+				return this.cb(this.errors.length>0 ? (this.errors.length===1 ? this.errors[0] : this.errors) : undefined, this.results);
 
 			if(this.scheduledTimeoutid===null)
 				this.next();

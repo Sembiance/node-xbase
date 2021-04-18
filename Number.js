@@ -93,7 +93,7 @@ if(!Number.prototype.secondsAsHumanReadable)
 			r.push(`${qty.toLocaleString(lang)}${short ? n.charAt(0) : ` ${n}${qty>1 || qty===0 ? "s" : ""}`}`);
 		});
 
-		if(left>0)
+		if(left>0 && r.length===0)
 		{
 			const qty = left*1000;
 			r.push(`${qty.toLocaleString(lang)}${short ? "ms" : ` millisecond${qty>1 || qty===0 ? "s" : ""}`}`);

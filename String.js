@@ -252,11 +252,12 @@ if(!String.prototype.escapeXML)
 
 String.prototype.escapeHTML = String.prototype.escapeXML;
 
-if(!String.prototype.escapeURI)
+// Encode a URL path segment, replacing things like # and ? with the proper hex escaping
+if(!String.prototype.encodeURLPath)
 {
-	String.prototype.escapeURI = function escapeURI()
+	String.prototype.encodeURLPath = function encodeURLPath(escapeHTMLToo)
 	{
-		// WARNING: Not compatible with URL's that contain ?query=params&whatnot=true
-		return this.split("/").map(v => encodeURIComponent(v)).join("/");
+		const result = this.replaceAll("#", "%23").replaceAll("?", "%3f");
+		return escapeHTMLToo ? result.escapeHTML() : result;
 	};
 }

@@ -257,7 +257,7 @@ if(!String.prototype.encodeURLPath)
 {
 	String.prototype.encodeURLPath = function encodeURLPath(escapeHTMLToo)
 	{
-		const result = this.replaceAll("#", "%23").replaceAll("?", "%3f");
+		const result = this.replaceAll("#", "%23").replaceAll("?", "%3f").replaceAll("\r", "%0d").replaceAll("\n", "%0a");
 		return escapeHTMLToo ? result.escapeHTML() : result;
 	};
 }

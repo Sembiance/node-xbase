@@ -261,3 +261,12 @@ if(!String.prototype.encodeURLPath)
 		return escapeHTMLToo ? result.escapeHTML() : result;
 	};
 }
+
+// Escape the string for inclusion in regex
+if(!String.prototype.escapeRegex)
+{
+	String.prototype.escapeRegex = function escapeRegex()
+	{
+		return this.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');	// eslint-disable-line unicorn/better-regex, no-useless-escape, quotes
+	};
+}

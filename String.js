@@ -252,13 +252,17 @@ if(!String.prototype.escapeXML)
 
 String.prototype.escapeHTML = String.prototype.escapeXML;
 
-// Encode a URL path segment, replacing things like # and ? with the proper hex escaping
+// Encode a URL path segment, replacing things like # and ? and % with the proper hex escaping
 if(!String.prototype.encodeURLPath)
 {
-	String.prototype.encodeURLPath = function encodeURLPath(escapeHTMLToo)
+	String.prototype.encodeURLPath = function encodeURLPath({skipEncodePercent}={})
 	{
-		const result = this.replaceAll("#", "%23").replaceAll("?", "%3f").replaceAll("\r", "%0d").replaceAll("\n", "%0a");
-		return escapeHTMLToo ? result.escapeHTML() : result;
+		let r = this;		// eslint-disable-line consistent-this
+		if(!skipEncodePercent)
+			r = r.replaceAll("%", "%25");
+		
+		r = r.replaceAll("#", "%23").replaceAll("?", "%3f").replaceAll("\r", "%0d").replaceAll("\n", "%0a");
+		return r;
 	};
 }
 

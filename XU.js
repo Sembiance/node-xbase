@@ -89,6 +89,22 @@
 			console.error(err);
 	};
 
+	// Tries the passed in fn, returning whatever it returns. If it fails, will return the fallbackResult
+	exports.tryFallback = function tryFallback(fn, fallbackResult)
+	{
+		let r = null;
+		try
+		{
+			r = fn();
+		}
+		catch(err)
+		{
+			r = fallbackResult;
+		}
+
+		return r;
+	};
+
 	// Will call fn and checkfn over and over until checkfn returns true
 	exports.waitUntil = function waitUntil(fn, checkfn, _options, _cb)
 	{
